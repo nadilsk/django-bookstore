@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStore — Update Book</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #faf9f6;
+            --bg-card: #ffffff;
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent-primary: #1e293b;
+            --accent-hover: #0f172a;
+            --brand-highlight: #d97706;
+            --border-color: #e4e4e7;
+            --input-bg: #fcfcfd;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 14px 30px -10px rgba(0,0,0,0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.5;
+        }
+
+        nav {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--brand-highlight);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .page-wrapper {
+            max-width: 740px;
+            margin: 44px auto 72px;
+            padding: 0 20px;
+        }
+
+        .form-header {
+            margin-bottom: 24px;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--brand-highlight);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .book-form-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(30,41,59,0.08);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .current-file {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .current-file a {
+            color: var(--brand-highlight);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+        }
+
+        input[type="file"] {
+            font-family: inherit;
+            font-size: 13px;
+            padding: 10px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+        }
+
+        @media(max-width: 640px) {
+            nav {
+                padding: 14px 20px;
+            }
+
+            .book-form-card {
+                padding: 22px 18px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="{% url 'home' %}" class="brand">
+        Book<span>Store</span>
+    </a>
+
+    <a href="{% url 'home' %}" class="back-link">
+        ← Back to Catalog
+    </a>
+</nav>
+
+<main class="page-wrapper">
+
+    <div class="form-header">
+        <span class="eyebrow">Catalog Management</span>
+        <h1>Update Book</h1>
+        <p>Update your book details, cover image and PDF file.</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="book-form-card">
+
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_name">Book Name</label>
+            <input
+                id="id_name"
+                type="text"
+                name="name"
+                value="{{ book.name }}"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="id_description">Description</label>
+            <textarea
+                id="id_description"
+                name="description"
+                required>{{ book.description }}</textarea>
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-group">
+                <label for="id_category">Category</label>
+
+                <select id="id_category" name="category" required>
+                    <option value="">Select Category</option>
+
+                    {% for cat in category %}
+                        <option value="{{ cat.id }}"
+                            {% if book.category_id == cat.id %}selected{% endif %}>
+                            {{ cat.name }}
+                        </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_price">Price</label>
+                <input
+                    id="id_price"
+                    type="number"
+                    name="price"
+                    value="{{ book.price }}"
+                    step="0.01"
+                    min="0"
+                    required>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="id_image">Book Image</label>
+
+            {% if book.image %}
+                <img src="{{ book.image.url }}"
+                     alt="{{ book.name }}"
+                     class="image-preview">
+
+                <p class="current-file">
+                    Current image: {{ book.image.name }}
+                </p>
+            {% endif %}
+
+            <input
+                id="id_image"
+                type="file"
+                name="image"
+                accept="image/*">
+
+            <p class="current-file">
+                Leave empty to keep the existing image.
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="id_file">Book File (PDF)</label>
+
+            {% if book.file %}
+                <p class="current-file">
+                    Current PDF:
+                    <a href="{{ book.file.url }}" target="_blank">
+                        View existing PDF
+                    </a>
+                </p>
+            {% endif %}
+
+            <input
+                id="id_file"
+                type="file"
+                name="file"
+                accept=".pdf">
+
+            <p class="current-file">
+                Leave empty to keep the existing PDF.
+            </p>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            Update Book
+        </button>
+
+    </form>
+
+</main>
+
+</body>
+</html>

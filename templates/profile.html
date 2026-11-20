@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStore Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #faf9f6;
+            --bg-card: #ffffff;
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent-primary: #1e293b;
+            --accent-hover: #0f172a;
+            --brand-highlight: #d97706;
+            --success-bg: #dcfce7;
+            --success-text: #15803d;
+            --danger-bg: #fef2f2;
+            --danger-text: #dc2626;
+            --neutral-bg: #f4f4f5;
+            --border-color: #e4e4e7;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 14px 30px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navigation */
+        nav {
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .brand span {
+            color: var(--brand-highlight);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-right a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-right a:hover {
+            color: var(--text-primary);
+        }
+
+        .user-pill {
+            background-color: var(--neutral-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1180px;
+            margin: 40px auto 72px;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--brand-highlight);
+            margin-bottom: 6px;
+        }
+
+        .page-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+        }
+
+        /* Count Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+            margin-bottom: 36px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 28px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 4px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-weight: 600;
+            border: none;
+            background: none;
+            font-size: 15px;
+            white-space: nowrap;
+            border-bottom: 2.5px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--brand-highlight);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .add-btn {
+            background: var(--accent-primary);
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .add-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 14px;
+            text-align: left;
+            border-bottom: 1px solid #f1f1f4;
+            font-size: 14px;
+        }
+
+        th {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tbody tr:hover {
+            background-color: #faf9f6;
+        }
+
+        .book-name-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .price-cell {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .status {
+            display: inline-block;
+            background: var(--success-bg);
+            color: var(--success-text);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-blocked {
+            display: inline-block;
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-inactive {
+            display: inline-block;
+            background: var(--neutral-bg);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .action-links {
+            white-space: nowrap;
+        }
+
+        .edit {
+            color: var(--accent-primary);
+            background-color: var(--neutral-bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .edit:hover {
+            background-color: #e4e4e7;
+        }
+
+        .delete {
+            color: var(--danger-text);
+            background-color: var(--danger-bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .delete:hover {
+            background-color: #fee2e2;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 32px 16px;
+        }
+
+        .panel-note {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 14px 20px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-content {
+                padding: 20px 16px;
+            }
+
+            table {
+                min-width: 620px;
+            }
+
+            .page-header h2 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="/" class="brand">Book<span>Store</span></a>
+        <div class="nav-right">
+            <a href="/">Home</a>
+            <span class="user-pill">{{ user }}</span>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="page-header">
+            <span class="eyebrow">Creator & Reader Studio</span>
+            <h2>Dashboard</h2>
+        </div>
+
+        <!-- Count Cards -->
+        <div class="cards">
+
+            <div class="card">
+                <p>Total Books</p>
+                <h3>{{ total_books }}</h3>
+            </div>
+
+            <div class="card">
+                <p>Active Books</p>
+                <h3>{{ active_books }}</h3>
+            </div>
+
+            <div class="card">
+                <p>Blocked Books</p>
+                <h3>{{ blocked_books }}</h3>
+            </div>
+
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+
+            <button class="tab active" onclick="openTab('books', this)">
+                My Books
+            </button>
+
+            <button class="tab" onclick="openTab('reports', this)">
+                Reports
+            </button>
+
+            <button class="tab" onclick="openTab('purchased', this)">
+                Purchased Books
+            </button>
+
+        </div>
+
+        <!-- My Books Tab -->
+        <div id="books" class="tab-content active">
+
+            <div class="section-header">
+                <h3>My Books</h3>
+                <a href="/add-book/" class="add-btn">+ Add Book</a>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td class="book-name-cell">{{ book.name }}</td>
+                            <td>{{ book.category }}</td>
+                            <td class="price-cell">₹{{ book.price }}</td>
+                            <td>
+                                {% if book.is_blocked %}
+                                    <span class="status-blocked">Blocked</span>
+                                {% elif book.is_active %}
+                                    <span class="status">Active</span>
+                                {% else %}
+                                    <span class="status-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td class="action-links">
+                                <a href="/update-book/{{ book.id }}/" class="edit">Edit</a>
+                                <a href="/delete-book/{{ book.id }}/" class="delete">Delete</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-state">No books added yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+
+            <div class="section-header">
+                <h3>Reported Books</h3>
+            </div>
+
+            <p class="panel-note">Reported books will be displayed here.</p>
+
+        </div>
+
+        <!-- Purchased Books Tab -->
+        <div id="purchased" class="tab-content">
+
+            <div class="section-header">
+                <h3>Purchased Books</h3>
+            </div>
+
+            <p class="panel-note">Your purchased books and downloads will appear here.</p>
+
+        </div>
+
+    </div>
+
+    <script>
+        function openTab(tabName, button) {
+
+            let contents = document.querySelectorAll('.tab-content');
+            let tabs = document.querySelectorAll('.tab');
+
+            contents.forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            button.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.name }} — BookStore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #faf9f6;
+            --bg-card: #ffffff;
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent-primary: #1e293b;
+            --accent-hover: #0f172a;
+            --brand-highlight: #d97706;
+            --border-color: #e4e4e7;
+            --input-bg: #fcfcfd;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 14px 30px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Bar */
+        nav {
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .brand span {
+            color: var(--brand-highlight);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Main Container */
+        .page-wrapper {
+            max-width: 960px;
+            margin: 44px auto 72px;
+            padding: 0 24px;
+        }
+
+        .book-detail-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 36px;
+            box-shadow: var(--shadow-md);
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* Cover Image Column */
+        .cover-panel {
+            background-color: #f4f4f5;
+            border: 1px solid #ececef;
+            border-radius: 14px;
+            padding: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 360px;
+        }
+
+        .cover-panel img {
+            max-width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            border-radius: 6px;
+            filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.14));
+        }
+
+        .cover-placeholder {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Details Column */
+        .category-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: var(--brand-highlight);
+            background-color: #fef3c7;
+            padding: 5px 11px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .book-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.25;
+            letter-spacing: -0.4px;
+            margin-bottom: 8px;
+        }
+
+        .book-author {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .book-author strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 18px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 22px;
+        }
+
+        .price-label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .price-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .btn-cart {
+            padding: 12px 24px;
+            background-color: var(--accent-primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-cart:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-cart:active {
+            transform: scale(0.99);
+        }
+
+        .description-block {
+            margin-bottom: 28px;
+        }
+
+        .description-block h2 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .description-block p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Rating Form Box */
+        .rating-box {
+            background-color: #faf9f6;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 20px;
+        }
+
+        .rating-box-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .rating-form {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .rating-form label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .rating-form select {
+            padding: 9px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .rating-form select:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .btn-rating {
+            padding: 9px 18px;
+            background-color: #ffffff;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-rating:hover {
+            background-color: #f4f4f5;
+            border-color: #d4d4d8;
+        }
+
+        @media (max-width: 780px) {
+            nav {
+                padding: 14px 20px;
+            }
+            .book-detail-card {
+                grid-template-columns: 1fr;
+                padding: 24px 20px;
+                gap: 24px;
+            }
+            .cover-panel {
+                min-height: 260px;
+            }
+            .book-title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="{% url 'home' %}" class="brand">Book<span>Store</span></a>
+        <div class="nav-actions">
+            <a href="{% url 'home' %}" class="nav-link">← Catalog</a>
+            <a href="/cart/" class="nav-link">Cart</a>
+        </div>
+    </nav>
+
+    <main class="page-wrapper">
+        <article class="book-detail-card">
+
+            <div class="cover-panel">
+                {% if book.image %}
+                    <img src="{{ book.image.url }}" alt="{{ book.name }}">
+                {% else %}
+                    <div class="cover-placeholder">No cover image available</div>
+                {% endif %}
+            </div>
+
+            <div class="details-panel">
+                <span class="category-badge">{{ book.category.name }}</span>
+
+                <h1 class="book-title">{{ book.name }}</h1>
+
+                <p class="book-author">
+                    <strong>Author:</strong> {{ book.author.username }}
+                </p>
+
+                <div class="price-row">
+                    <div>
+                        <span class="price-label">Price</span>
+                        <span class="price-value">₹{{ book.price }}</span>
+                    </div>
+
+                    <form action="{% url 'add_to_cart' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="book" value="{{ book.id }}">
+                        <button type="submit" class="btn-cart">Add to Cart</button>
+                    </form>
+                </div>
+
+                {% if book.description %}
+                    <div class="description-block">
+                        <h2>Description</h2>
+                        <p>{{ book.description }}</p>
+                    </div>
+                {% endif %}
+
+                <div class="rating-box">
+                    <div class="rating-box-title">Rate this Book</div>
+                    <form action="{% url 'rating' %}" method="POST" class="rating-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="book_id" value="{{ book.id }}">
+
+                        <label for="score">Rating (1-5):</label>
+                        <select name="rating" id="score">
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+
+                        <button type="submit" class="btn-rating">Submit Rating</button>
+                    </form>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+</body>
+</html>
