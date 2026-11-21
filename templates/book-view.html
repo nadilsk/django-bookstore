@@ -18,6 +18,8 @@
             --accent-primary: #1e293b;
             --accent-hover: #0f172a;
             --brand-highlight: #d97706;
+            --danger-color: #dc2626;
+            --danger-bg: #fef2f2;
             --border-color: #e4e4e7;
             --input-bg: #fcfcfd;
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -292,6 +294,78 @@
             border-color: #d4d4d8;
         }
 
+        /* Redesigned Report Section */
+        .report-box {
+            margin-top: 16px;
+            background-color: #faf9f6;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 20px;
+        }
+
+        .report-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .report-box-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .report-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .report-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-input {
+            flex: 1;
+            min-width: 0;
+            padding: 9px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .report-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.08);
+        }
+
+        .btn-report {
+            padding: 9px 18px;
+            background-color: #ffffff;
+            color: var(--danger-color);
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-report:hover {
+            background-color: var(--danger-bg);
+            border-color: #fca5a5;
+        }
+
         @media (max-width: 780px) {
             nav {
                 padding: 14px 20px;
@@ -306,6 +380,16 @@
             }
             .book-title {
                 font-size: 26px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .report-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-report {
+                width: 100%;
             }
         }
     </style>
@@ -376,6 +460,18 @@
                         </select>
 
                         <button type="submit" class="btn-rating">Submit Rating</button>
+                    </form>
+                </div>
+
+                <div class="report-box">
+                    <div class="report-box-header">
+                        <div class="report-box-title">Report this Book</div>
+                        <span class="report-hint">Flag an issue with this listing</span>
+                    </div>
+                    <form action="{% url 'report' book.id %}" method="POST" class="report-form">
+                        {% csrf_token %}
+                        <input type="text" name="report" class="report-input" placeholder="Describe why you're reporting this book..." required>
+                        <button type="submit" class="btn-report">Submit</button>
                     </form>
                 </div>
             </div>

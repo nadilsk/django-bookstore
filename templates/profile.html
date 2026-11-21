@@ -361,6 +361,72 @@
             font-size: 15px;
         }
 
+        /* Redesigned Reports Section */
+        .reports-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .report-card {
+            background-color: #faf9f6;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--brand-highlight);
+            border-radius: 12px;
+            padding: 18px 20px;
+            transition: box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .report-card:hover {
+            background-color: #ffffff;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .report-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .report-book-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .reporter-pill {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        .reporter-pill strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .report-reason {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .report-empty {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            padding: 28px 16px;
+        }
+
         @media (max-width: 768px) {
             nav {
                 padding: 14px 20px;
@@ -496,7 +562,21 @@
                 <h3>Reported Books</h3>
             </div>
 
-            <p class="panel-note">Reported books will be displayed here.</p>
+            {% if reports %}
+                <div class="reports-list">
+                    {% for report in reports %}
+                        <article class="report-card">
+                            <div class="report-card-header">
+                                <h4 class="report-book-title">{{ report.book.name }}</h4>
+                                <span class="reporter-pill">By: <strong>{{ report.user.fullname }}</strong></span>
+                            </div>
+                            <p class="report-reason">{{ report.reason }}</p>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="report-empty">No reported books at the moment.</p>
+            {% endif %}
 
         </div>
 

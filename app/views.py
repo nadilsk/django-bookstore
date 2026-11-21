@@ -174,7 +174,7 @@ def profile(request):
     total_books= Book.objects.filter(author=user).count()
     active_books= Book.objects.filter(author=user, is_active=True).count()
     blocked_books= Book.objects.filter(author=user, is_blocked=True).count()
-    reports = Report.objects.filter(book__author=user)
+    reports = Report.objects.filter(book__author__id=user)
     return render(request, 'profile.html', {
         'books':books, 
         'user':user_name,
@@ -184,9 +184,24 @@ def profile(request):
         'reports':reports
     })
 
-# def report(request):
-#     user = request.session.get('user_id')
-#     if not user:
-#         return redirect('/login/')
-#     reports = Report.objects.filter(book__author=user)
-#     return render()
+def report(request,id):
+    user = request.session.get('user_id')
+
+    if not user:
+        return redirect('/login/')
+
+    if request.method == 'POST':
+        reason = request.POST.get('report')
+
+        book = Book.objects.get(id=id)
+
+        report_obj = Report()
+        report_obj.reason = reason
+        report_obj.book = book
+        report_obj.user = User.objects.get(id=user)
+
+        report_obj.save()
+
+        return redirect('/')
+
+    return render(request, 'report.html')
