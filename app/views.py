@@ -30,7 +30,11 @@ def login(request):
             request.session['user_id'] = user.id
             request.session['user_name'] = user.fullname
             request.session['is_admin'] = user.is_admin
-            return redirect('/')
+
+            if user.is_admin:
+                return redirect('/admin-dashboard/')
+            else:
+                return redirect('/')
     return render(request, 'login.html')
 
 def logout(request):
@@ -205,3 +209,24 @@ def report(request,id):
         return redirect('/')
 
     return render(request, 'report.html')
+
+
+def admin_dashboard(request):
+    user = request.session.get('is_admin')
+    if  not user:
+        return redirect('login')
+    total_users = User.objects.all().count()
+    blocked_users = User.objects.filter(is_blocked=True).count()
+    total_books = Book.objects.all().count()
+    active_books = Book.objects.filter(is_active=True).count()
+    blocked_books = Book.objects.filter(is_blocked=True).count()
+
+    return render(request, 'admin-dashboard.html',
+                  {
+                      "total_users":total_users,
+                      "blocked_users":blocked_users,
+                      "total_books":total_books,
+                      "active_books":active_books,
+                      "blocked_books": blocked_books
+                  }
+    )

@@ -7,6 +7,7 @@ class User(models.Model):
     fullname = models.CharField(max_length=200)
     age = models.IntegerField()
     is_admin = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
     def __str__(self):
         return self.username
 
