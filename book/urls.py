@@ -44,7 +44,9 @@ urlpatterns = [
     path('report/<int:id>/', views.report, name='report'),
     
 
-    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard')
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    # path('admin/users/', views.admin_users, name='admin_users')
+
 
 ]
 if settings.DEBUG:

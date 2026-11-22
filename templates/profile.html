@@ -456,6 +456,11 @@
         <a href="/" class="brand">Book<span>Store</span></a>
         <div class="nav-right">
             <a href="/">Home</a>
+            {% if request.session.is_admin %}
+                <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+            {% else %}
+                <a href="{% url 'profile' %}">My Profile</a>
+            {% endif %}
             <span class="user-pill">{{ user }}</span>
         </div>
     </nav>

@@ -220,13 +220,20 @@ def admin_dashboard(request):
     total_books = Book.objects.all().count()
     active_books = Book.objects.filter(is_active=True).count()
     blocked_books = Book.objects.filter(is_blocked=True).count()
-
+    users = User.objects.all()
+    books = Book.objects.all()
+    reports = Report.objects.all()
+    
     return render(request, 'admin-dashboard.html',
                   {
                       "total_users":total_users,
                       "blocked_users":blocked_users,
                       "total_books":total_books,
                       "active_books":active_books,
-                      "blocked_books": blocked_books
+                      "blocked_books": blocked_books,
+                      "users":users,
+                      "books":books,
+                      "reports":reports
                   }
     )
+    
