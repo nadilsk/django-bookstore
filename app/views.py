@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from app.models import User,Book,Cart,Rating,Category,Report
+from app.models import User,Book,Cart,Rating,Category,Report,Purchase
 from django.db.models import Avg
 
 # Create your views here.
@@ -76,13 +76,21 @@ def add_to_cart(request):
     user = request.session.get('user_id')
     if not user:
         return redirect('/login')
-    
+
     book = request.POST.get('book')
-    cart = Cart()
-    cart.user = User.objects.get(id=user)
-    cart.book = Book.objects.get(id=book)
-    cart.save()
-    return redirect('/cart/')
+    is_carted = Cart.objects.filter(
+        user_id=user,
+        book_id=book
+        ).exists()
+
+    if is_carted:
+        return redirect('/cart/')
+    else:
+        cart = Cart()
+        cart.user = User.objects.get(id=user)
+        cart.book = Book.objects.get(id=book)
+        cart.save()
+        return redirect('/cart/')
 
 def remove_from_cart(request, id):
     item = Cart.objects.get(id=id)
@@ -179,13 +187,15 @@ def profile(request):
     active_books= Book.objects.filter(author=user, is_active=True).count()
     blocked_books= Book.objects.filter(author=user, is_blocked=True).count()
     reports = Report.objects.filter(book__author__id=user)
+    purchased_books = Purchase.objects.filter(user__id=user)
     return render(request, 'profile.html', {
         'books':books, 
         'user':user_name,
         'total_books':total_books,
         'active_books':active_books,
         'blocked_books':blocked_books,
-        'reports':reports
+        'reports':reports,
+        'purchased_books':purchased_books
     })
 
 def report(request,id):
@@ -236,4 +246,21 @@ def admin_dashboard(request):
                       "reports":reports
                   }
     )
+
+
+def purchase_book(request):
+    user = request.session.get('user_id')
+    print(user)
+    if  not user:
+        return redirect('login')
+    purchased_book = request.POST.get('book')
+
+    is_purchased = Purchase.objects.filter(user__id=user, book__id=purchased_book).exists()
+    if is_purchased:
+        return redirect('/profile/#purchased')
     
+    purchased = Purchase()
+    purchased.user = User.objects.get(id=user)
+    purchased.book = Book.objects.get(id=purchased_book)
+    purchased.save()
+    return redirect('/profile/')

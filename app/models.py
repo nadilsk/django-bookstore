@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    username = models.CharField(max_length=200)
+    username = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
     fullname = models.CharField(max_length=200)
     age = models.IntegerField()
@@ -28,6 +28,7 @@ class Book(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     is_blocked = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -60,7 +61,7 @@ class Report(models.Model):
     def __str__(self):
         return self.reason
 
-class Purchased(models.Model):
+class Purchase(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
