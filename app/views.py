@@ -142,6 +142,8 @@ def add_book(request):
         return redirect('/')
     
     return render(request, 'add-book.html', {'category':categories})
+
+
 def update_book(request, id):
     user = request.session.get('user_id')
 
@@ -176,13 +178,24 @@ def update_book(request, id):
         'category': categories
     })
 
+def delete_book(request, id):
+    user = request.session.get('user_id')
+
+    if not user:
+        return redirect('/login/')
+
+    book = Book.objects.get(id=id, author_id=user)
+
+    book.is_deleted = True
+    book.save()
+    return redirect('/profile/')
 
 def profile(request):
     user = request.session.get('user_id')
     if not user:
         return redirect('/login/')
     user_name = request.session.get('user_name')
-    books=Book.objects.filter(author=user)
+    books=Book.objects.filter(author=user, is_deleted = False)
     total_books= Book.objects.filter(author=user).count()
     active_books= Book.objects.filter(author=user, is_active=True).count()
     blocked_books= Book.objects.filter(author=user, is_blocked=True).count()
