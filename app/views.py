@@ -100,19 +100,25 @@ def remove_from_cart(request, id):
 
 def rating(request):
     user_id = request.session.get('user_id')
+    book_id = request.POST.get('book_id')
+    rating_value = request.POST.get('rating')
+
+
     if not user_id:
         return redirect('/login')
 
-    if request.method == 'POST':
-        rating_value = request.POST.get('rating')
-        book_id = request.POST.get('book_id')
+    is_rated =  Rating.objects.filter(
+                    user__id=user_id,
+                    book__id=book_id,
+                ).exists()
+    if is_rated:
+        return redirect('/')
 
-        Rating.objects.update_or_create(
-                user=user_id,
-                book=book_id,
-                defaults={'rating': int(rating_value)}
-            )
-        
+    if request.method == 'POST':
+        rating = Rating()
+        rating.user = User.objects.get(id=user_id)
+        rating.book = Book.objects.get(id=book_id)
+        rating.rating_value = rating_value
     return redirect('/')
 
 
